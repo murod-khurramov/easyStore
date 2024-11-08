@@ -50,3 +50,7 @@ Route::put('admin/users/{user}', [AdminUserController::class, 'updateUser'])->na
 
 Route::get('admin/books/create', [AdminBookController::class, 'create'])->name('admin.books.create');
 Route::post('admin/books', [AdminBookController::class, 'store'])->name('admin.books.store');
+
+Route::middleware('auth')->group(function () {
+    Route::post('user/orders/{order}/update-status', [UserController::class, 'updateOrderStatus'])->name('user.orders.update-status');
+});
