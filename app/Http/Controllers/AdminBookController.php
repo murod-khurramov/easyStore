@@ -26,35 +26,6 @@ class AdminBookController extends Controller
 
         return back()->with('success', 'Baholash muvaffaqiyatli saqlandi');
     }
-
-
-
-    public function create(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application
-    {
-        $categories = Category::all();
-        return view('admin.books.create', compact('categories'));
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'author' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-
-        $book = Book::create($request->all());
-
-        if ($request->hasFile('image')) {
-            $book->image = $request->file('image')->store('images', 'public');
-            $book->save();
-        }
-
-        return redirect()->route('admin.books.index')->with('success', 'Kitob muvaffaqiyatli qo\'shildi');
-    }
-
-
     public function destroy($id): \Illuminate\Http\RedirectResponse
     {
         $book = Book::findOrFail($id);
@@ -108,5 +79,31 @@ class AdminBookController extends Controller
         return view('admin.books.statistics', compact('totalBooks', 'highestPriceBook', 'lowestPriceBook'));
     }
 
+    public function create()
+    {
+        $categories = Category::all();
+        return view('admin.books.create', compact('categories'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'author' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'category_id' => 'required|exists:categories,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $book = new Book($request->all());
+
+        if ($request->hasFile('image')) {
+            $book->image = $request->file('image')->store('images');
+        }
+
+        $book->save();
+
+        return redirect()->route('admin.books.index');
+    }
 
 }

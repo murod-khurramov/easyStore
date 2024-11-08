@@ -82,3 +82,20 @@
     </select>
     <button type="submit">Filterlash</button>
 </form>
+
+<h2>Buyurtmalarim</h2>
+@foreach ($orders as $order)
+    <div>
+        <h3>Buyurtma #{{ $order->id }}</h3>
+        <p>Status: {{ $order->status }}</p>
+        <p>Sana: {{ $order->created_at->format('d-m-Y') }}</p>
+    </div>
+@endforeach
+
+<h2>Foydalanuvchilar</h2>
+@foreach ($users as $user)
+    <div>
+        <p>{{ $user->name }} - {{ $user->email }}</p>
+        <a href="{{ route('admin.users.edit', $user->id) }}">Tahrirlash</a>
+    </div>
+@endforeach

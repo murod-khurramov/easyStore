@@ -9,6 +9,9 @@ class Order extends Model
 {
     use HasFactory;
 
+    public mixed $status;
+    public mixed $id;
+    public mixed $user;
     protected $fillable = ['user_id', 'status'];
 
     public function books(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
